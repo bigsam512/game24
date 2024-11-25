@@ -1,0 +1,58 @@
+openapi: 3.1.0
+info:
+  title: 24点计算器
+  description: >
+    一个用于解决24点游戏的工具。输入4个字符表示的数字（1~13），规则如下：
+    - 单字符表示1~9
+    - '0' 表示10
+    - 'j' 表示11
+    - 'q' 表示12
+    - 'k' 表示13
+    输入必须是一个长度为4的字符串。
+    返回可能的解法或者提示无解。
+  version: v1.0.0
+servers:
+  - url: http://192.168.100.199:8000
+paths:
+  /calc24:
+    get:
+      description: 计算24点游戏，输入为4字符字符串
+      operationId: game24get
+      parameters:
+        - name: nums
+          in: query
+          required: true
+          description: >
+            表示数字1–13的4字符字符串：
+            - 1–9: 使用单字符
+            - 10: 使用 '0'
+            - 11: 使用 'j'
+            - 12: 使用 'q'
+            - 13: 使用 'k'
+          schema:
+            type: string
+            pattern: '^[1-9jqk0]{4}$'
+            minLength: 4
+            maxLength: 4
+      responses:
+        '200':
+          description: 返回24点游戏的解法或无解信息
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  solutions:
+                    type: array
+                    items:
+                      type: string
+                    description: 包含所有可能解法的数组。如果无解则为空。
+                  input:
+                    type: string
+                    description: 提供给工具的输入字符串
+                required:
+                  - solutions
+                  - input
+components:
+  schemas: {}
+
